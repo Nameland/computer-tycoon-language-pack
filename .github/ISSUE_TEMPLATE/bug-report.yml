@@ -1,0 +1,39 @@
+name: Bug report
+description: Report a crash, loading problem, or other mod issue.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How can we reproduce it?
+      description: Describe the steps that led to the problem. If it happened only once, say so.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Game and mod versions
+      placeholder: e.g. Game 0.9.9.16, mod 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: language
+    attributes:
+      label: Selected language
+      description: If you switched languages before the problem, mention both.
+  - type: input
+    id: bepinex
+    attributes:
+      label: BepInEx version
+      description: Include it if you know it. It appears near the top of BepInEx/LogOutput.log.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots or log excerpt
+      description: Attach screenshots or paste relevant error lines from BepInEx/LogOutput.log. Remove personal information and do not upload game files or full diagnostic dumps. For display issues, include your resolution and display scaling.

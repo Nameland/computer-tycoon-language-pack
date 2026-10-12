@@ -1,0 +1,37 @@
+name: Translation correction
+description: Suggest better wording or report missing or clipped text.
+body:
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      placeholder: e.g. German
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Where does the text appear?
+      placeholder: e.g. Market details, tutorial, or a specific event
+  - type: textarea
+    id: current-text
+    attributes:
+      label: Current text
+      description: Copy the wording you want to report. Include the English source if you know it.
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-text
+    attributes:
+      label: Suggested correction
+      description: Write your proposed wording and, if useful, explain what the current text gets wrong. Leave this blank if you are unsure.
+  - type: input
+    id: versions
+    attributes:
+      label: Game and mod versions
+      placeholder: e.g. Game 0.9.9.16, mod 0.1.0
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot or extra context
+      description: You can attach a screenshot here. For clipped or overlapping text, include your resolution and display scaling.
