@@ -1,0 +1,59 @@
+# .NET build output
+**/bin/
+**/obj/
+/dist/
+/artifacts/
+/TestResults/
+*.pdb
+*.cache
+
+# Local game dependencies and runtime data
+/dependencies/
+/BepInEx/
+**/interop/
+*.dll
+*.exe
+*.sav
+*.log
+*.dmp
+
+# Generated reports and private working material
+/work/
+/LOCAL/
+/context/
+/backups/
+*.bak
+*.tmp
+*.orig
+*.rej
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Editors and operating systems
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.swp
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local configuration and credentials
+.env
+.env.*
+*.env
+
+# Distribution archives
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Unity's interop CoreModule contains a stub NullableAttribute with no CLR ctor. -->
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <AssemblyName>ComputerTycoon.LanguageMod</AssemblyName>
+    <RootNamespace>ComputerTycoon.LanguageMod</RootNamespace>
+    <InteropRoot Condition="'$(InteropRoot)' == ''">$(MSBuildThisFileDirectory)../../dependencies/BepInEx</InteropRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Localization.Core/Localization.Core.csproj" />
+    <Reference Include="$(InteropRoot)/core/BepInEx.Core.dll" Private="false" />
+    <Reference Include="$(InteropRoot)/core/BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <Reference Include="$(InteropRoot)/core/0Harmony.dll" Private="false" />
+    <Reference Include="$(InteropRoot)/core/Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="$(InteropRoot)/interop/*.dll" Private="false" />
+  </ItemGroup>
+</Project>

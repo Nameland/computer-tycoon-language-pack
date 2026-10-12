@@ -1,0 +1,22 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+
+[*.{cs,py,ps1}]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.json]
+indent_style = space
+indent_size = 2
+
+[*.ps1]
+end_of_line = crlf
+
+[*.cs]
+csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_blocks = false

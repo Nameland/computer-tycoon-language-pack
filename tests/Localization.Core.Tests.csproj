@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net6.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../src/Localization.Core/Localization.Core.csproj" /></ItemGroup>
+  <ItemGroup><Compile Include="../src/ComputerTycoon.LanguageMod/ModelNameSlots.cs" Link="ModelNameSlots.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../src/ComputerTycoon.LanguageMod/LegalCaptionPolicy.cs" Link="LegalCaptionPolicy.cs" /></ItemGroup>
+</Project>

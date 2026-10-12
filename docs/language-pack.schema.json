@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Computer Tycoon language pack",
+  "type": "object",
+  "required": ["schemaVersion", "id", "nativeName", "strings"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9-]{0,31}$" },
+    "name": { "type": "string", "maxLength": 128 },
+    "nativeName": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "font": { "type": "string", "default": "Arial", "maxLength": 128 },
+    "strings": {
+      "type": "object",
+      "maxProperties": 50000,
+      "propertyNames": { "maxLength": 32768 },
+      "additionalProperties": { "type": "string", "maxLength": 32768 }
+    },
+    "rules": {
+      "type": "array",
+      "maxItems": 1024,
+      "items": {
+        "type": "object",
+        "required": ["pattern", "replacement"],
+        "properties": {
+          "pattern": { "type": "string", "maxLength": 4096 },
+          "replacement": { "type": "string", "maxLength": 32768 },
+          "translateGroups": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1, "not": { "const": "0" } },
+            "default": [],
+            "description": "Existing capture group names to translate before inserting their ${name} references. Other captures, including personal/product names, remain unchanged."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
