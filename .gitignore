@@ -33,6 +33,7 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+.ruff_cache/
 
 # Editors and operating systems
 .vs/

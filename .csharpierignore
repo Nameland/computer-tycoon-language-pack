@@ -1,0 +1,5 @@
+**/bin/**
+**/obj/**
+dependencies/**
+dist/**
+work/**

@@ -4,11 +4,14 @@
 Builds the plugin and packages its language files for installation.
 .PARAMETER BepInExDirectory
 The initialized BepInEx folder in an installed copy of the game.
+.PARAMETER OutputDirectory
+Destination for the archive and staging files. Defaults to the repository's dist folder.
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
-    [string]$BepInExDirectory
+    [string]$BepInExDirectory,
+    [string]$OutputDirectory
 )
 
 $ErrorActionPreference = 'Stop'
@@ -37,7 +40,9 @@ function Get-ReleaseVersion {
 
     $source = Get-Content -LiteralPath (Join-Path $Root 'src\ComputerTycoon.LanguageMod\Plugin.cs') -Raw
     $match = [regex]::Match($source, 'public const string Version = "(\d+\.\d+\.\d+)"')
-    if (-not $match.Success) { throw 'Cannot read the plugin version.' }
+    if (-not $match.Success) {
+        throw 'Cannot read the plugin version.'
+    }
     $version = $match.Groups[1].Value
     foreach ($name in @('ComputerTycoon.LanguageMod', 'Localization.Core')) {
         [xml]$project = Get-Content -LiteralPath (Join-Path $Root "src\$name\$name.csproj") -Raw
@@ -65,7 +70,10 @@ function Read-LanguagePack {
 }
 
 function Copy-LanguagePacks {
-    param([string]$Source, [string]$Destination)
+    param(
+        [string]$Source,
+        [string]$Destination
+    )
 
     $packs = Get-ChildItem -LiteralPath $Source -File -Filter '*.json'
     foreach ($packFile in $packs) {
@@ -74,11 +82,16 @@ function Copy-LanguagePacks {
         if ($pack.id -notmatch '^[a-zA-Z][a-zA-Z0-9-]{0,31}$' -or $pack.id -cne $packFile.BaseName) {
             throw "Language id must be valid and match the filename: $($packFile.Name)"
         }
-        if ($pack.id -eq 'en') { continue } # Source-only translator template.
+        # The English file is a source-only translator template.
+        if ($pack.id -eq 'en') {
+            continue
+        }
         Copy-Item -LiteralPath $packFile.FullName -Destination $Destination
 
         $assets = Join-Path $Source "$($pack.id)-assets"
-        if (-not (Test-Path -LiteralPath $assets -PathType Container)) { continue }
+        if (-not (Test-Path -LiteralPath $assets -PathType Container)) {
+            continue
+        }
         $assetTarget = Join-Path $Destination "$($pack.id)-assets"
         New-Item -ItemType Directory -Path $assetTarget | Out-Null
         # Include only runtime images, never editor backups or source artwork.
@@ -95,7 +108,11 @@ $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $interopRoot = (Resolve-Path -LiteralPath $BepInExDirectory).Path
 Assert-Dependencies -Directory $interopRoot
 $version = Get-ReleaseVersion -Root $projectRoot
-$dist = Join-Path $projectRoot 'dist'
+$dist = if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
+    Join-Path $projectRoot 'dist'
+} else {
+    [IO.Path]::GetFullPath($OutputDirectory)
+}
 $archive = Join-Path $dist "ComputerTycoon.LanguageMod-$version.zip"
 if (Test-Path -LiteralPath $archive) {
     throw "Archive already exists: $archive. Preserve or rename it before rebuilding."
@@ -103,7 +120,9 @@ if (Test-Path -LiteralPath $archive) {
 
 $projectFile = Join-Path $projectRoot 'src\ComputerTycoon.LanguageMod\ComputerTycoon.LanguageMod.csproj'
 & dotnet build $projectFile -c Release "-p:InteropRoot=$interopRoot"
-if ($LASTEXITCODE -ne 0) { throw 'Build failed.' }
+if ($LASTEXITCODE -ne 0) {
+    throw 'Build failed.'
+}
 
 $stage = Join-Path $dist ('stage-' + [guid]::NewGuid().ToString('N'))
 $plugin = Join-Path $stage 'BepInEx\plugins\ComputerTycoon.LanguageMod'

@@ -10,7 +10,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 LANGUAGE_ID = re.compile(r"[a-zA-Z][a-zA-Z0-9-]{0,31}\Z")
 PLACEHOLDERS = re.compile(r"\{\{?\w+(?:[^{}]*?)\}\}?")
-MARKUP = re.compile(r"</?(?:b|i|u|s|color|size|font|sprite|link|align|br|sub|sup|anim)(?:[:= ][^>]*)?/?>")
+MARKUP = re.compile(
+    r"</?(?:b|i|u|s|color|size|font|sprite|link|align|br|sub|sup|anim)(?:[:= ][^>]*)?/?>"
+)
 NUMBERS = re.compile(r"\d+(?:[.,]\d+)*")
 LEADING_SPACE = re.compile(r"^\s*")
 TRAILING_SPACE = re.compile(r"\s*$")
@@ -29,9 +31,7 @@ def reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 def read_pack(path: Path) -> dict[str, Any]:
     if path.stat().st_size > 16 * 1024 * 1024:
         raise ValueError("Pack exceeds 16 MiB")
-    pack = json.loads(
-        path.read_text(encoding="utf-8-sig"), object_pairs_hook=reject_duplicate_keys
-    )
+    pack = json.loads(path.read_text(encoding="utf-8-sig"), object_pairs_hook=reject_duplicate_keys)
     if not isinstance(pack, dict):
         raise ValueError("Pack must be a JSON object")
     return pack
@@ -40,7 +40,8 @@ def read_pack(path: Path) -> dict[str, Any]:
 def validate_metadata(pack: dict[str, Any], path: Path) -> list[str]:
     issues = []
     language = pack.get("id")
-    if pack.get("schemaVersion") != 1:
+    version = pack.get("schemaVersion")
+    if type(version) is not int or version != 1:
         issues.append("schemaVersion must be 1")
     if not isinstance(language, str) or not LANGUAGE_ID.fullmatch(language):
         issues.append("Invalid language id")
@@ -88,10 +89,14 @@ def boundary_spaces(text: str) -> tuple[str, str]:
     def normalize(value: str) -> str:
         return re.sub(r"[^\S\r\n]+", " ", value.replace("\r\n", "\n"))
 
-    return normalize(LEADING_SPACE.match(text).group()), normalize(TRAILING_SPACE.search(text).group())
+    return normalize(LEADING_SPACE.match(text).group()), normalize(
+        TRAILING_SPACE.search(text).group()
+    )
 
 
-def validate_strings(pack: dict[str, Any], english: dict[str, str]):
+def validate_strings(
+    pack: dict[str, Any], english: dict[str, str]
+) -> tuple[list[str], list[dict[str, str]]]:
     issues = []
     numeric_notes = []
     for source, translated in pack["strings"].items():
@@ -113,9 +118,9 @@ def validate_strings(pack: dict[str, Any], english: dict[str, str]):
         if boundary_spaces(source) != boundary_spaces(translated):
             issues.append(f"Changed fragment boundary whitespace: {label}")
         if pack["id"] != "en" and NUMBERS.findall(source) != NUMBERS.findall(translated):
-            numeric_notes.append({
-                "language": pack["id"], "source": source, "translation": translated
-            })
+            numeric_notes.append(
+                {"language": pack["id"], "source": source, "translation": translated}
+            )
     return issues, numeric_notes
 
 
@@ -149,7 +154,9 @@ def main() -> int:
             string_issues, notes = validate_strings(pack, english)
             issues.extend(f"{path.name}: {issue}" for issue in string_issues)
             numeric_notes.extend(notes)
-            print(f"{path.name}: {len(pack['strings'])} strings, {len(pack.get('rules', []))} rules")
+            print(
+                f"{path.name}: {len(pack['strings'])} strings, {len(pack.get('rules', []))} rules"
+            )
         except (OSError, ValueError) as error:
             issues.append(f"{path.name}: {error}")
 

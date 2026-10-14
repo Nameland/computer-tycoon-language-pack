@@ -29,7 +29,7 @@ See the [official BepInEx installation guide](https://docs.bepinex.dev/master/ar
 ### 2. Install the mod
 
 1. Open [Releases](https://github.com/Nameland/computer-tycoon-language-pack/releases/latest).
-2. Under **Assets**, download `ComputerTycoon.LanguageMod-0.1.0.zip`, or the equivalent ZIP for a newer version. The **Source code** downloads are not installable mod packages.
+2. Under **Assets**, download `ComputerTycoon.LanguageMod-0.1.1.zip`, or the equivalent ZIP for a newer version. The **Source code** downloads are not installable mod packages.
 3. Extract the ZIP into the same game folder. Merge the `BepInEx` folders if Windows asks.
 4. Check that this file exists:
 
